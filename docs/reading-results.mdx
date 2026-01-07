@@ -1,70 +1,53 @@
 # Reading Results
 
-Each run produces a full step-by-step trace that shows exactly what happened during execution.
+Every run produces a trace showing what the agent saw, what actions it chose, and what happened as a result.
 
-## Run timeline
+## What you see in a run
 
-The timeline shows each step in sequence.
+**Steps in order:**
 
-**For each step, the trace shows:**
+Each step shows one complete cycle of observation, action, and result.
 
-- The observation sent to the agent
-- The agent's raw action (before validation)
-- The agent's validated action (after schema and policy checks)
-- Any faults applied to the observation, action, or tool result
-- The tool result returned to the agent
-- Invariant evaluation results
+**Observations sent to the agent:**
 
-Steps are numbered sequentially. The timeline ends when the run terminates.
+The world state the agent received at each step, including any data from previous tool calls.
 
-## Interpreting failures
+**Actions the agent chose:**
 
-Failures occur at a specific step in the timeline.
+The tool calls your agent requested, including the tool name and arguments.
 
-**To identify the failure:**
+**Tool results:**
 
-1. Find the step where the failureMode was set
-2. Check whether an invariant failed or an analyzer triggered
-3. Examine the action or state that caused the failure
-4. Review any faults that were injected at that step
+What each tool call returned to the agent, including data, errors, or timeouts.
 
-Look for the first step where failureMode becomes non-NONE.
+**Injected failures, if any:**
 
-## Invariant failures versus analyzer failures
+When Kindred simulated failures like tool errors or incomplete observations, these are marked in the trace.
 
-**Invariant failures:**
+**Final result:**
 
-- Occur when semantic correctness is violated
-- Happen at the step where the invariant is evaluated
-- Show which invariant failed and why
-- Indicate incorrect final state or forbidden action
+Whether the run passed or failed, and the reason Kindred reports when a run fails.
 
-**Analyzer failures:**
+## How to debug a failure
 
-- Occur when behavioral pathology is detected
-- May be detected after multiple steps show a pattern
-- Show which analyzer triggered and what pattern was found
-- Indicate inefficient or problematic behavior patterns
+1. Find the step where the run failed
 
-Both types of failures set a failureMode and cause the run to fail.
+Look for the step where the final result shows failure.
 
-## Identifying root cause
+2. Read the failure reason Kindred reports
 
-From a single run, you can identify the root cause:
+The failure reason explains what went wrong, such as incorrect final state, policy violation, or getting stuck in a loop.
 
-**Step-by-step analysis:**
+3. Inspect what the agent did at that step
 
-1. Start at the failure step
-2. Work backwards through the timeline
-3. Identify the first action or state that led to the failure
-4. Check if faults were injected that affected the outcome
+Check what action the agent chose and what tool result it received.
 
-**Key questions:**
+4. Check whether the environment behaved unexpectedly
 
-- What action did the agent take that caused the failure?
-- Was a fault injected that changed the expected behavior?
-- Did the agent handle the fault correctly?
-- Was the failure due to incorrect logic or unhandled edge case?
+Review whether any failures were injected that the agent should have handled, or if the agent made an incorrect decision.
 
-The trace provides all information needed to debug from a single run without re-running.
+## Types of failures
 
+Some failures mean the agent produced the wrong outcome. The agent completed the task but the final state is incorrect, or the agent took a forbidden action.
+
+Some failures mean the agent got stuck or behaved inefficiently. The agent repeated the same actions without making progress, made too many unnecessary tool calls, or exhausted step limits without completing the task.
