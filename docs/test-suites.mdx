@@ -1,26 +1,51 @@
 Each suite answers a different reliability question about your agent.
 
-**Resiliency**
-Can the agent recover when tools fail or data is incomplete?
-Tests scenarios like: tools returning 500 errors, timeouts, incomplete observations, delayed or reordered tool results, stale state.
-Passing means the agent still reaches the correct outcome under failures. The agent handles transient errors, retries appropriately, and doesn't crash on incomplete data.
+## Resiliency
 
-**Security**
-Does the agent stay within policy even when it could take shortcuts?
-Tests scenarios like: attempts to use restricted tools, unsafe arguments passed to tools, path traversal attempts, unauthorized access patterns.
-Passing means the agent completes tasks without violating security policies. The agent only uses allowed tools with safe arguments and respects access boundaries.
+**Question:** Can the agent recover when tools fail or data is incomplete?
 
-**Abuse and behavioral issues**
-Is the agent wasting resources or stuck in loops?
-Tests scenarios like: making 50+ identical tool calls, repeating actions without state changes, exhausting step limits without progress.
-Passing means the agent completes tasks efficiently without getting stuck. The agent makes steady progress, doesn't spam tools, and completes within reasonable step counts.
+```bash
+kindred test run --agent <agent> --suite resiliency
+```
 
-**Long-horizon integrity**
-Can the agent maintain intent over many steps under noise?
-Tests scenarios like: multi-stage tasks with observation noise injected mid-run, unexpected information in observations, long sequences that require maintaining context.
-Passing means the agent maintains focus across many steps, even with unexpected information. The agent doesn't lose track of the goal and completes multi-stage tasks correctly.
+Tests scenarios like tools returning 500 errors, timeouts, incomplete observations, delayed or reordered tool results, and stale state. Passing means the agent still reaches the correct outcome under failures. The agent handles transient errors, retries appropriately, and doesn't crash on incomplete data.
 
-**Drift and stability**
-Is the agent stable across runs?
-Tests scenarios like: running the same task multiple times with identical inputs, comparing tool call sequences, comparing final states, checking success rate consistency.
-Passing means the agent behaves consistently when given the same task multiple times. The agent takes similar actions and produces the same final state across runs, with low variance in success rate.
+## Security
+
+**Question:** Does the agent stay within policy even when it could take shortcuts?
+
+```bash
+kindred test run --agent <agent> --suite security
+```
+
+Tests scenarios like attempts to use restricted tools, unsafe arguments passed to tools, path traversal attempts, and unauthorized access patterns. Passing means the agent completes tasks without violating security policies. The agent only uses allowed tools with safe arguments and respects access boundaries.
+
+## Abuse and behavioral issues
+
+**Question:** Is the agent wasting resources or stuck in loops?
+
+```bash
+kindred test run --agent <agent> --suite abuse
+```
+
+Tests scenarios like making 50+ identical tool calls, repeating actions without state changes, and exhausting step limits without progress. Passing means the agent completes tasks efficiently without getting stuck. The agent makes steady progress, doesn't spam tools, and completes within reasonable step counts.
+
+## Long-horizon integrity
+
+**Question:** Can the agent maintain intent over many steps under noise?
+
+```bash
+kindred test run --agent <agent> --suite integrity
+```
+
+Tests scenarios like multi-stage tasks with observation noise injected mid-run, unexpected information in observations, and long sequences that require maintaining context. Passing means the agent maintains focus across many steps, even with unexpected information. The agent doesn't lose track of the goal and completes multi-stage tasks correctly.
+
+## Drift and stability
+
+**Question:** Is the agent stable across runs?
+
+```bash
+kindred test run --agent <agent> --suite drift
+```
+
+Tests scenarios like running the same task multiple times with identical inputs, comparing tool call sequences, comparing final states, and checking success rate consistency. Passing means the agent behaves consistently when given the same task multiple times. The agent takes similar actions and produces the same final state across runs, with low variance in success rate.
