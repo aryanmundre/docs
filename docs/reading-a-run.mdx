@@ -1,22 +1,25 @@
-# Reading a Run
+## What you see in a run
 
-## What a run shows
+Each step in the trace shows:
 
-- What the agent saw
-- What the agent did
-- What happened as a result
-- Final result and failure reason
+- **Observation:** The world state sent to your agent, including data from previous tool calls, current state of records or systems, and any injected failures
+- **Action:** The tool call your agent requested, including tool name and arguments, plus whether it passed validation
+- **Tool result:** What the tool returned to your agent, including response data, errors, timeouts, or forced results from injected failures
+- **Final result:** Pass or fail status, plus the specific failure reason if it failed (e.g., "incorrect final state", "policy violation", "no progress loop", "tool spam")
 
-## How to debug a failure
+Steps are numbered sequentially. The trace ends when the run terminates or fails.
 
-1. Find the step where the run failed
-2. Read the reported failure reason
-3. Inspect the agent action at that step
-4. Check whether the environment behaved unexpectedly
+## If a run fails
+
+1. **Find the step where the run failed** - Look for the step where the failure reason appears, or the last step before the run stopped
+2. **Read the reported failure reason** - The failure reason tells you what went wrong: incorrect outcome, forbidden action, getting stuck in a loop, or exhausting step limits
+3. **Inspect the agent action at that step** - Check what tool the agent called, what arguments it passed, and what result it received
+4. **Check whether the environment behaved unexpectedly** - Review if any failures were injected (marked in the trace) that the agent should have handled, or if the agent made an incorrect decision with normal inputs
+
+Work backwards from the failure step to identify the first action or state that led to the problem.
 
 ## Failure types
 
-Some failures mean the agent produced the wrong outcome.
+**Wrong outcome:** The agent completed the task but produced incorrect final state, took a forbidden action, or violated a policy. The agent's logic or decision-making was incorrect.
 
-Some failures mean the agent got stuck or behaved inefficiently over time.
-
+**Bad behavior over time:** The agent got stuck repeating the same actions without progress, made excessive unnecessary tool calls, or exhausted step limits without completing the task. The agent's behavior pattern was inefficient or broken.

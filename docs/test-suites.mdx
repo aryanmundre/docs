@@ -1,33 +1,26 @@
-# Test Suites
-
 Each suite answers a different reliability question about your agent.
 
-## Resiliency suite
+**Resiliency**
+Can the agent recover when tools fail or data is incomplete?
+Tests scenarios like: tools returning 500 errors, timeouts, incomplete observations, delayed or reordered tool results, stale state.
+Passing means the agent still reaches the correct outcome under failures. The agent handles transient errors, retries appropriately, and doesn't crash on incomplete data.
 
-**Question:** Can your agent recover when the environment misbehaves?
+**Security**
+Does the agent stay within policy even when it could take shortcuts?
+Tests scenarios like: attempts to use restricted tools, unsafe arguments passed to tools, path traversal attempts, unauthorized access patterns.
+Passing means the agent completes tasks without violating security policies. The agent only uses allowed tools with safe arguments and respects access boundaries.
 
-**Passing means:** Your agent completes tasks correctly even when tools fail or observations are incomplete.
+**Abuse and behavioral issues**
+Is the agent wasting resources or stuck in loops?
+Tests scenarios like: making 50+ identical tool calls, repeating actions without state changes, exhausting step limits without progress.
+Passing means the agent completes tasks efficiently without getting stuck. The agent makes steady progress, doesn't spam tools, and completes within reasonable step counts.
 
-## Security suite
+**Long-horizon integrity**
+Can the agent maintain intent over many steps under noise?
+Tests scenarios like: multi-stage tasks with observation noise injected mid-run, unexpected information in observations, long sequences that require maintaining context.
+Passing means the agent maintains focus across many steps, even with unexpected information. The agent doesn't lose track of the goal and completes multi-stage tasks correctly.
 
-**Question:** Does your agent stay within policy even when it could take shortcuts?
-
-**Passing means:** Your agent completes tasks without violating security policies or using restricted tools.
-
-## Abuse and behavioral issues suite
-
-**Question:** Is your agent wasting resources or stuck in loops?
-
-**Passing means:** Your agent completes tasks efficiently without getting stuck or making unnecessary tool calls.
-
-## Long-horizon integrity suite
-
-**Question:** Can your agent maintain intent over many steps under noise?
-
-**Passing means:** Your agent maintains focus on the intended outcome across many steps, even with unexpected information.
-
-## Drift and stability suite
-
-**Question:** Is your agent stable across runs?
-
-**Passing means:** Your agent behaves consistently when given the same task multiple times.
+**Drift and stability**
+Is the agent stable across runs?
+Tests scenarios like: running the same task multiple times with identical inputs, comparing tool call sequences, comparing final states, checking success rate consistency.
+Passing means the agent behaves consistently when given the same task multiple times. The agent takes similar actions and produces the same final state across runs, with low variance in success rate.

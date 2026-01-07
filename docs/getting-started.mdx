@@ -1,28 +1,43 @@
 # Getting Started
 
-## What Kindred is
+Kindred runs your agent in a safe sandbox and tells you if it passes or fails. You get a clear result plus the exact reason if something goes wrong.
 
-Kindred tests AI agents that take actions by running them in a safe environment and reporting clear pass or fail results.
+**Use Kindred if your agent:** calls tools, changes state, or cannot afford silent failures.
 
-## When to use Kindred
+**What you run:** Run test suites against your agent and get pass or fail plus a reason.
 
-- Agents that call tools
-- Agents that change state
-- Agents where failure matters
+## Connect your agent
 
-## What you run
+Implement a POST `/run_step` endpoint that receives observations and returns actions.
 
-Run test suites against your agent and get a result plus a failure reason if it fails.
+**Request example:**
 
-## How to connect your agent
+```bash
+POST /run_step
+Content-Type: application/json
 
-Implement POST /run_step that receives observations and returns an action with a tool and args.
+{
+  "run_id": "...",
+  "step_index": 1,
+  "observation": { ... }
+}
+```
+
+**Response example:**
+
+```json
+{
+  "action": {
+    "tool": "tool_name",
+    "args": {}
+  }
+}
+```
 
 ## First run
 
-1. Register agent and get a token
-2. Point Kindred at your /run_step endpoint
-3. Run a test suite
+1. Register your agent and get a token
+2. Point Kindred at your `/run_step` endpoint
+3. Run a suite
 
-Each run produces a trace explaining exactly why it passed or failed.
-
+Every run produces a trace showing exactly why it passed or failed.
