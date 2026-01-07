@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
+
+.ml-sidebar-header .ml-sidebar-logo,
+.ml-navbar-logo,
+.ml-sidebar-header a,
+[data-testid="sidebar-logo"],
+.navbar-logo {
+  font-family: 'Sora', sans-serif !important;
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
