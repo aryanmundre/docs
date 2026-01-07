@@ -1,0 +1,92 @@
+# How Kindred Works
+
+## Sandbox runs
+
+A run is a single execution of a versioned task against an agent.
+
+A run is fully determined by:
+
+- The agent implementation
+- A versioned task definition
+- Deterministic seeds
+- A deterministic fault schedule
+
+Given the same inputs, a run produces the same trace structure and outcomes.
+
+## Sandbox execution
+
+Each run executes inside a deterministic sandbox world.
+
+The sandbox:
+
+- Simulates realistic state such as records, APIs, or DOMs
+- Is the only component allowed to mutate state
+- Produces deterministic observations and tool results
+
+No real external systems are touched during sandbox runs.
+
+[Diagram: deterministic sandbox run lifecycle]
+
+## Execution lifecycle
+
+A run proceeds as a fixed step-by-step loop:
+
+1. The sandbox produces an observation of current world state
+2. Deterministic faults may be injected into the observation
+3. The agent is called via POST /run_step with the observation
+4. The agent returns an action requesting a tool call
+5. The action is validated against schema and policy
+6. Deterministic faults may modify or block the action
+7. The sandbox executes the tool or returns a forced result
+8. Deterministic faults may modify the tool result or next observation
+9. Invariants are evaluated
+10. The step is appended to the trace
+
+## What is controlled versus real
+
+**Controlled (sandbox):**
+
+- World state (databases, APIs, DOMs)
+- Tool execution results
+- Observations sent to the agent
+- Fault injection
+
+**Real:**
+
+- Your agent implementation
+- The agent's decision logic
+- The agent's tool calls
+
+Your agent runs as-is. The sandbox controls the world state and tool execution.
+
+## Pass and fail
+
+A run passes only if its failureMode is NONE.
+
+A run fails when failureMode != NONE.
+
+failureMode can be set by invariants, analyzers, policy violations, or agent errors.
+
+## When runs terminate
+
+Runs stop when:
+
+- Success conditions are met
+- A hard failure occurs
+- Step limits are exceeded
+- Time limits are exceeded
+
+## Determinism and fault injection
+
+Faults are predefined, seeded, and deterministic.
+
+Faults can simulate conditions such as:
+
+- API errors
+- Timeouts
+- Schema drift
+- Prompt injection
+- Malformed tool responses
+
+There is no randomness outside of recorded seeds. All fault effects are logged in the trace.
+

@@ -1,0 +1,70 @@
+# Reading Results
+
+Each run produces a full step-by-step trace that shows exactly what happened during execution.
+
+## Run timeline
+
+The timeline shows each step in sequence.
+
+**For each step, the trace shows:**
+
+- The observation sent to the agent
+- The agent's raw action (before validation)
+- The agent's validated action (after schema and policy checks)
+- Any faults applied to the observation, action, or tool result
+- The tool result returned to the agent
+- Invariant evaluation results
+
+Steps are numbered sequentially. The timeline ends when the run terminates.
+
+## Interpreting failures
+
+Failures occur at a specific step in the timeline.
+
+**To identify the failure:**
+
+1. Find the step where the failureMode was set
+2. Check whether an invariant failed or an analyzer triggered
+3. Examine the action or state that caused the failure
+4. Review any faults that were injected at that step
+
+Look for the first step where failureMode becomes non-NONE.
+
+## Invariant failures versus analyzer failures
+
+**Invariant failures:**
+
+- Occur when semantic correctness is violated
+- Happen at the step where the invariant is evaluated
+- Show which invariant failed and why
+- Indicate incorrect final state or forbidden action
+
+**Analyzer failures:**
+
+- Occur when behavioral pathology is detected
+- May be detected after multiple steps show a pattern
+- Show which analyzer triggered and what pattern was found
+- Indicate inefficient or problematic behavior patterns
+
+Both types of failures set a failureMode and cause the run to fail.
+
+## Identifying root cause
+
+From a single run, you can identify the root cause:
+
+**Step-by-step analysis:**
+
+1. Start at the failure step
+2. Work backwards through the timeline
+3. Identify the first action or state that led to the failure
+4. Check if faults were injected that affected the outcome
+
+**Key questions:**
+
+- What action did the agent take that caused the failure?
+- Was a fault injected that changed the expected behavior?
+- Did the agent handle the fault correctly?
+- Was the failure due to incorrect logic or unhandled edge case?
+
+The trace provides all information needed to debug from a single run without re-running.
+

@@ -1,0 +1,76 @@
+# Test Suites
+
+Kindred evaluates runs using three distinct mechanisms: invariants, analyzers, and failure modes.
+
+Invariants evaluate semantic correctness; analyzers evaluate trace patterns; failureMode is the single outcome.
+
+## Semantic correctness (invariants)
+
+Invariants check semantic correctness only.
+
+**What it catches:**
+
+- Final world state correctness
+- Data integrity violations
+- Forbidden actions or outcomes
+- Incorrect final results
+
+**Example:**
+
+An invariant checks that a user record is created with the correct email address. If the agent creates a user with a malformed email, the invariant fails.
+
+**What it does not catch:**
+
+- Retry behavior
+- Looping patterns
+- Timing issues
+- Step count
+
+Violating a hard invariant sets the failureMode and causes the run to fail.
+
+## Behavioral pathologies (analyzers)
+
+Analyzers detect behavioral pathologies by inspecting the execution trace.
+
+**What it catches:**
+
+- Tool spam (excessive tool calls)
+- No progress loops (repeating without advancement)
+- Max step exhaustion (hitting step limits)
+- Resource abuse (inefficient patterns)
+
+**Example:**
+
+An analyzer detects when an agent calls the same search tool 50 times in a row without making progress. This indicates a loop that won't terminate.
+
+**What it does not catch:**
+
+- Semantic correctness (use invariants)
+- Single-step errors (use invariants)
+- Prompt quality issues
+
+Analyzers emit explicit failure modes that identify the specific pathology.
+
+## Failure modes
+
+Every run produces a single authoritative failureMode.
+
+**Examples:**
+
+- NONE (run passed)
+- INVARIANT_FAILED
+- NO_PROGRESS_LOOP
+- TOOL_SPAM
+- TOOL_NOT_ALLOWED
+- AGENT_ERROR
+
+A run only passes if failureMode is NONE.
+
+**Failure modes as source of truth:**
+
+- Assertions never override failure modes
+- Each failure mode maps to a specific issue
+- The failure mode determines pass or fail status
+
+Use the failure mode to understand what went wrong and why the run failed.
+

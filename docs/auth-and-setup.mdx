@@ -1,0 +1,36 @@
+# Authentication and Setup
+
+## Implementing your agent
+
+Your agent must implement a POST `/run_step` endpoint that Kindred calls.
+
+**Request from Kindred:**
+
+- `run_id`: Identifier for the run
+- `step_index`: Current step number
+- `observation`: Current world state observation
+
+**Response from your agent:**
+
+```json
+{
+  "action": {
+    "tool": "tool_name",
+    "args": {}
+  }
+}
+```
+
+## Authentication
+
+Kindred issues a token per agent registration. Requests to your agent include it.
+
+## Setup steps
+
+1. Get token
+2. Configure agent endpoint
+3. Run a task
+
+## First run
+
+On the first run, Kindred sends an initial observation to your agent. Your agent processes the observation and returns an action. The sandbox executes the tool call, and the run continues step-by-step until termination.
