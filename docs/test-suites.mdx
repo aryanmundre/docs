@@ -1,80 +1,33 @@
 # Test Suites
 
-Kindred provides multiple test suites. Each suite answers a different reliability question about your agent.
-
-An agent can pass one suite and fail another.
+Each suite answers a different reliability question about your agent.
 
 ## Resiliency suite
 
-**Question it answers:** Can your agent recover when the environment misbehaves?
+**Question:** Can your agent recover when the environment misbehaves?
 
-**What kinds of failures it surfaces:**
-
-- Agent fails when tools return errors
-- Agent fails when observations are incomplete or stale
-- Agent fails when tool results are delayed or reordered
-- Agent gets stuck and cannot make progress
-
-**What passing means:**
-
-Your agent completes tasks correctly even when tools fail, observations are incomplete, or results arrive out of order. The agent recovers from transient failures and reaches the correct final state.
+**Passing means:** Your agent completes tasks correctly even when tools fail or observations are incomplete.
 
 ## Security suite
 
-**Question it answers:** Does your agent stay within policy even when it could take shortcuts?
+**Question:** Does your agent stay within policy even when it could take shortcuts?
 
-**What kinds of failures it surfaces:**
-
-- Agent attempts to use restricted tools
-- Agent passes unsafe arguments to tools
-- Agent attempts unauthorized access patterns
-
-**What passing means:**
-
-Your agent completes tasks without violating security policies. It only uses allowed tools with safe arguments and respects access boundaries.
+**Passing means:** Your agent completes tasks without violating security policies or using restricted tools.
 
 ## Abuse and behavioral issues suite
 
-**Question it answers:** Is your agent wasting resources or stuck in loops?
+**Question:** Is your agent wasting resources or stuck in loops?
 
-**What kinds of failures it surfaces:**
-
-- Agent makes excessive identical tool calls
-- Agent repeats actions without making progress
-- Agent exhausts step limits without completing the task
-
-**What passing means:**
-
-Your agent completes tasks efficiently without getting stuck in loops or making unnecessary tool calls. It makes steady progress toward the goal.
+**Passing means:** Your agent completes tasks efficiently without getting stuck or making unnecessary tool calls.
 
 ## Long-horizon integrity suite
 
-**Question it answers:** Can your agent maintain intent over many steps under noise?
+**Question:** Can your agent maintain intent over many steps under noise?
 
-**What kinds of failures it surfaces:**
-
-- Agent loses track of the goal over long sequences
-- Agent changes direction when observations include noise
-- Agent fails to complete multi-stage tasks
-
-**What passing means:**
-
-Your agent maintains focus on the intended outcome across many steps, even when observations include unexpected information or noise.
+**Passing means:** Your agent maintains focus on the intended outcome across many steps, even with unexpected information.
 
 ## Drift and stability suite
 
-**Question it answers:** Is your agent stable across runs?
+**Question:** Is your agent stable across runs?
 
-**What kinds of failures it surfaces:**
-
-- Agent takes different actions for the same task across runs
-- Agent produces different final states for identical inputs
-- Agent's success rate varies unpredictably
-
-**What passing means:**
-
-Your agent behaves consistently when given the same task multiple times. It takes similar actions and produces the same final state across runs.
-
-## Understanding suite results
-
-Suites produce diagnostic signals, not just pass or fail. When a suite fails, you see the reason Kindred reports why the run failed, so you know what went wrong and can fix it.
+**Passing means:** Your agent behaves consistently when given the same task multiple times.

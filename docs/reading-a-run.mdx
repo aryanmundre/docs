@@ -1,0 +1,22 @@
+# Reading a Run
+
+## What a run shows
+
+- What the agent saw
+- What the agent did
+- What happened as a result
+- Final result and failure reason
+
+## How to debug a failure
+
+1. Find the step where the run failed
+2. Read the reported failure reason
+3. Inspect the agent action at that step
+4. Check whether the environment behaved unexpectedly
+
+## Failure types
+
+Some failures mean the agent produced the wrong outcome.
+
+Some failures mean the agent got stuck or behaved inefficiently over time.
+

@@ -1,0 +1,28 @@
+# Getting Started
+
+## What Kindred is
+
+Kindred tests AI agents that take actions by running them in a safe environment and reporting clear pass or fail results.
+
+## When to use Kindred
+
+- Agents that call tools
+- Agents that change state
+- Agents where failure matters
+
+## What you run
+
+Run test suites against your agent and get a result plus a failure reason if it fails.
+
+## How to connect your agent
+
+Implement POST /run_step that receives observations and returns an action with a tool and args.
+
+## First run
+
+1. Register agent and get a token
+2. Point Kindred at your /run_step endpoint
+3. Run a test suite
+
+Each run produces a trace explaining exactly why it passed or failed.
+
