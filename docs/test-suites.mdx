@@ -8,7 +8,9 @@ Each suite answers a different reliability question about your agent.
 kindred test run --agent <agent> --suite resiliency
 ```
 
-Tests scenarios like tools returning 500 errors, timeouts, incomplete observations, delayed or reordered tool results, and stale state. Passing means the agent still reaches the correct outcome under failures. The agent handles transient errors, retries appropriately, and doesn't crash on incomplete data.
+- Tests scenarios like: tools returning 500 errors, timeouts, incomplete observations, delayed or reordered tool results, and stale state
+- Passing means: the agent still reaches the correct outcome under failures
+- The agent handles transient errors, retries appropriately, and doesn't crash on incomplete data
 
 ## Security
 
@@ -18,7 +20,9 @@ Tests scenarios like tools returning 500 errors, timeouts, incomplete observatio
 kindred test run --agent <agent> --suite security
 ```
 
-Tests scenarios like attempts to use restricted tools, unsafe arguments passed to tools, path traversal attempts, and unauthorized access patterns. Passing means the agent completes tasks without violating security policies. The agent only uses allowed tools with safe arguments and respects access boundaries.
+- Tests scenarios like: attempts to use restricted tools, unsafe arguments passed to tools, path traversal attempts, and unauthorized access patterns
+- Passing means: the agent completes tasks without violating security policies
+- The agent only uses allowed tools with safe arguments and respects access boundaries
 
 ## Abuse and behavioral issues
 
@@ -28,7 +32,9 @@ Tests scenarios like attempts to use restricted tools, unsafe arguments passed t
 kindred test run --agent <agent> --suite abuse
 ```
 
-Tests scenarios like making 50+ identical tool calls, repeating actions without state changes, and exhausting step limits without progress. Passing means the agent completes tasks efficiently without getting stuck. The agent makes steady progress, doesn't spam tools, and completes within reasonable step counts.
+- Tests scenarios like: making 50+ identical tool calls, repeating actions without state changes, and exhausting step limits without progress
+- Passing means: the agent completes tasks efficiently without getting stuck
+- The agent makes steady progress, doesn't spam tools, and completes within reasonable step counts
 
 ## Long-horizon integrity
 
@@ -38,7 +44,9 @@ Tests scenarios like making 50+ identical tool calls, repeating actions without 
 kindred test run --agent <agent> --suite integrity
 ```
 
-Tests scenarios like multi-stage tasks with observation noise injected mid-run, unexpected information in observations, and long sequences that require maintaining context. Passing means the agent maintains focus across many steps, even with unexpected information. The agent doesn't lose track of the goal and completes multi-stage tasks correctly.
+- Tests scenarios like: multi-stage tasks with observation noise injected mid-run, unexpected information in observations, and long sequences that require maintaining context
+- Passing means: the agent maintains focus across many steps, even with unexpected information
+- The agent doesn't lose track of the goal and completes multi-stage tasks correctly
 
 ## Drift and stability
 
@@ -48,4 +56,6 @@ Tests scenarios like multi-stage tasks with observation noise injected mid-run, 
 kindred test run --agent <agent> --suite drift
 ```
 
-Tests scenarios like running the same task multiple times with identical inputs, comparing tool call sequences, comparing final states, and checking success rate consistency. Passing means the agent behaves consistently when given the same task multiple times. The agent takes similar actions and produces the same final state across runs, with low variance in success rate.
+- Tests scenarios like: running the same task multiple times with identical inputs, comparing tool call sequences, comparing final states, and checking success rate consistency
+- Passing means: the agent behaves consistently when given the same task multiple times
+- The agent takes similar actions and produces the same final state across runs, with low variance in success rate
