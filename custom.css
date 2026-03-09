@@ -11,3 +11,90 @@
   letter-spacing: -0.01em;
 }
 
+/* --- Global Overrides --- */
+:root {
+  --brand-pink: #f28caf;       /* HSL 330 80% 75% */
+  --brand-pink-dark: #d94382;  /* HSL 330 70% 55% */
+  --brand-blue: #3b82f6;       /* HSL 221.2 83.2% 53.3% - from your --ring */
+}
+
+/* --- Light Mode Styling --- */
+.light {
+  --background: #f9fbfd; 
+  --foreground: #030816;
+  --bg-color: var(--background);
+  --text-main: var(--foreground);
+  --border-color: #e2e8f0; 
+}
+
+/* --- Dark Mode Styling --- */
+.dark {
+  --background: #020817; 
+  --foreground: #f8fafc;
+  --bg-color: var(--background);
+  --bg-dark: var(--background);
+  --text-main: var(--foreground);
+  --border-color: #1e293b; 
+}
+
+/* --- Code Block & Syntax Highlighting --- */
+
+/* Code block background */
+.prose pre {
+  background-color: #0b1120 !important; /* Slightly lighter than your main background */
+  border: 1px solid var(--border-color);
+}
+
+/* Syntax Colors - Magenta/Pink Theme */
+
+/* Keywords (if, import, return) */
+.token.keyword, 
+.token.variable {
+  color: #f28caf !important;
+}
+
+/* Functions & Methods */
+.token.function {
+  color: #3b82f6 !important;
+}
+
+/* Strings & Constants */
+.token.string, 
+.token.attr-value {
+  color: #a5f3fc !important; /* Muted cyan to balance the pink */
+}
+
+/* Comments */
+.token.comment {
+  color: #64748b !important; /* Muted slate */
+  font-style: italic;
+}
+
+/* Brackets and Operators */
+.token.punctuation, 
+.token.operator {
+  color: #94a3b8 !important;
+}
+
+/* --- Component Overrides --- */
+
+/* Sidebar Active State */
+.sidebar-item.active {
+  color: var(--brand-pink) !important;
+  border-left-color: var(--brand-pink) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--brand-pink) !important;
+  color: #ffffff !important;
+}
+
+.dark .btn-primary {
+  background-color: var(--brand-pink-dark) !important;
+}
+
+/* Horizontal Rules */
+hr {
+  border-color: var(--border-color) !important;
+}
