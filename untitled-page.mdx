@@ -1,0 +1,180 @@
+---
+title: "Getting Started with Kindred"
+sidebarTitle: "Get set up"
+description: "How to connect your agent to Kindred, configure the tracer, and link to replay URLs."
+---
+
+## Overview
+
+Kindred lets you **capture, search, and replay** your agents’ behavior with minimal code changes. Use the Tracer SDK to auto-instrument your calls and the Replay Studio to debug sessions in real-time.
+
+<CardGroup cols={3}>
+  <Card title="Tracer SDK" icon="code">
+    Auto-instruments LLM + tool calls via Node/Python.
+  </Card>
+  <Card title="Replay Studio" icon="play">
+    Debug and analyze sessions visually.
+  </Card>
+  <Card title="Reproducibility" icon="arrows-rotate">
+    Deep-link into specific sessions and drift checks.
+  </Card>
+</CardGroup>
+
+---
+
+## 1. Create an Agent in Kindred
+
+Follow these steps to register your agent and obtain your credentials:
+
+1. **Sign In**: Log into the [Kindred web app](https://app.usekindred.dev).
+2. **Register Agent**: Go to **Agents → New Agent** and provide a **Name** and your **Run Step URL** (the HTTPS endpoint where Kindred can call your agent).
+3. **Save Credentials**: Copy the **Bearer token**, **Agent ID**, and **API key**. 
+
+<Warning>
+  The Bearer token and API key are only shown once! Save them to a secure location immediately.
+</Warning>
+
+---
+
+## 2. Environment Variables
+
+Set these in your agent’s environment (e.g., `.env` file or CI/CD secrets).
+
+### Tracer Configuration
+
+| Variable | Description |
+| :--- | :--- |
+| `KINDRED_API_KEY` | Secret token allowing the tracer to send logs. |
+| `KINDRED_AGENT_ID` | Unique ID used to attribute logs to this agent. |
+| `KINDRED_SESSION_ID` | (Optional) Logical ID for a conversation or user session. |
+| `KINDRED_RUN_ID` | (Optional) Identifier for a specific experiment or AB test. |
+
+### Server Validation
+
+* **`KINDRED_BEARER_TOKEN`**: Used by your agent's HTTP server to verify that incoming requests are actually from Kindred.
+
+---
+
+## 3. Install and Initialize the Tracer
+
+### Node.js (`kindred-tracer-node`)
+
+Install the package using your preferred manager:
+
+```bash
+npm install kindred-tracer-node
+
+```
+
+Initialize the tracer at the very top of your entry point:
+
+```javascript
+import { kindredTracer, flushLogs } from "kindred-tracer-node";
+
+async function main() {
+  // Initialize once at startup (reads from process.env)
+  kindredTracer();
+
+  // Standard LLM call - auto-captured by tracer
+  const res = await fetch("[https://api.openai.com/v1/chat/completions](https://api.openai.com/v1/chat/completions)", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: "Hello Kindred!" }],
+    }),
+  });
+
+  // Ensure logs are sent before process exit
+  await flushLogs();
+}
+
+```
+
+### Python (`kindred-tracer`)
+
+Install the package with HTTP support:
+
+```bash
+pip install kindred-tracer[all]
+
+```
+
+Initialize the tracer before creating your LLM client:
+
+```python
+from kindred_tracer import kindred_tracer, flush
+from openai import OpenAI
+import os
+
+# Initialize tracer (reads KINDRED_* env vars)
+kindred_tracer()
+
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hello Kindred!"}],
+)
+
+# Flush logs before shutdown
+flush()
+
+```
+
+---
+
+## 4. Connecting Your Run Step URL
+
+Kindred calls your agent's HTTP endpoint to enable **validation** and **replay**.
+
+### Validation Request
+
+Kindred will send a `POST` request to your configured URL with an `Authorization: Bearer <KINDRED_BEARER_TOKEN>` header.
+
+**Request Body:**
+
+```json
+{
+  "observation": {
+    "type": "kindred_validation",
+    "message": "hello"
+  }
+}
+
+```
+
+<Info>
+**Local Development**: Use a tunnel like **ngrok** to expose your local server via HTTPS so Kindred can reach your machine.
+</Info>
+
+---
+
+## 5. Linking to Replay URLs
+
+You can programmatically generate deep links to specific sessions to include in your internal dashboards, Sentry issues, or Slack alerts.
+
+**URL Format:**
+`https://app.usekindred.dev/reproducibility?sessionId=<ID>&agentId=<ID>`
+
+```javascript
+function getReplayUrl(sessionId, agentId) {
+  const baseUrl = "[https://app.usekindred.dev/reproducibility](https://app.usekindred.dev/reproducibility)";
+  return `${baseUrl}?sessionId=${sessionId}&agentId=${agentId}`;
+}
+
+```
+
+---
+
+## 6. Quick Checklist
+
+* [ ] Created agent in Kindred and saved all tokens.
+* [ ] Installed the Tracer SDK for your language.
+* [ ] Environment variables are set in your production/local environment.
+* [ ] Called initialization function at the start of your app.
+* [ ] Run Step URL is validated and returns `{"ok": true}`.
+
+Once complete, your agent is fully wired for search, replay, and reproducibility!
